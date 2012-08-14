@@ -5,5 +5,8 @@
 </head>
 <body>
 <h1>Game</h1>
+
+
+<a href="${pageContext.request.contextPath}/" title="Back">Back</a>
 </body>
 </html>

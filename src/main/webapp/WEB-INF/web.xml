@@ -7,6 +7,7 @@
         <param-value>
             /WEB-INF/spring/root-context.xml
             /WEB-INF/spring/application-security.xml
+            /WEB-INF/db/db-config.xml
         </param-value>
     </context-param>
 
@@ -28,6 +29,11 @@
         <servlet-name>appServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/errors/403.html</location>
+    </error-page>
 
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>

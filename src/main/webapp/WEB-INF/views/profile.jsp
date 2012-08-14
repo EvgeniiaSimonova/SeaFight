@@ -14,7 +14,7 @@
     </tr>
     <tr>
         <td width="25%">Menu</td>
-        <td>Hi, ${user.username}!</td>
+        <td>Hi, ${userDetailsImpl.username}!</td>
         <td width="25%">
             <sec:authorize access="hasRole('ROLE_ADMIN')">
                 Menu Admin
@@ -46,7 +46,6 @@
         </td>
     </tr>
 </table>
-
 
 </body>
 </html>

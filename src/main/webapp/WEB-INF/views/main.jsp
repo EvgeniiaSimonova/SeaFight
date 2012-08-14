@@ -5,6 +5,7 @@
 <%@ page session="true"%>
 <html>
     <head>
+        <!--<meta http-equiv="refresh" content="5; url=/profile/">-->
         <title>Main Page</title>
     </head>
     <body>

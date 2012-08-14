@@ -1,78 +1,62 @@
 package ru.testhf.srv3.h37945.domain;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.HashSet;
+import javax.persistence.*;
+import java.io.Serializable;
 
-public class User implements UserDetails{
-    private String username;
+@NamedQueries({
+        @NamedQuery(name = User.NamedQuery.USER_FIND_ALL, query = "from User"),
+        @NamedQuery(name = User.NamedQuery.USER_FIND_BY_ID, query = "from User where id = :id") })
+@NamedNativeQueries({
+        @NamedNativeQuery(name = User.NamedQuery.USER_FIND_BY_NAME, query = "select * from User where name like :name", resultClass = User.class) })
+
+@Entity
+@Table(name="Users")
+public class User implements Serializable{
+    @Id
+    @Column
+    private String login;
+    @Column
     private String password;
-    private Collection<GrantedAuthority> authorities;
+    @Column
+    private String role;
 
-    public User(String username, String password, String roles) {
-        super();
-        this.username = username;
+    public User() {
+    }
+
+    public User(String login, String password, String role) {
+        this.login = login;
         this.password = password;
-        this.setAuthorities(roles);
+        this.role = role;
     }
 
-    public void setAuthorities(String roles) {
-        this.authorities = new HashSet<GrantedAuthority>();
-        for (final String role : roles.split(",")) {
-            if (role != null && !"".equals(role.trim())) {
-                GrantedAuthority grandAuthority = new GrantedAuthority() {
-
-                    public String getAuthority() {
-                        return role.trim();
-                    }
-                };
-                this.authorities.add(grandAuthority);
-            }
-        }
+    public String getLogin() {
+        return login;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
+    public String getRole() {
+        return role;
     }
 
-    @Override
-    public String getPassword() {
-        return password;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public static class NamedQuery {
+        public static final String USER_FIND_ALL = "User.findAll";
+        public static final String USER_FIND_BY_ID = "User.findById";
+        public static final String USER_FIND_BY_NAME = "User.findByName";
     }
 }
