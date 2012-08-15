@@ -36,12 +36,12 @@
         <td></td>
         <td>
             <sec:authorize access="hasRole('ROLE_ADMIN')">
-                <spring:url value="/deleteuser/" var="deleteuserUrl" />
-                <spring:url value="/designateadmin/" var="designateadminUrl" />
+                <spring:url value="/admin/deleteuser/" var="deleteuserUrl" />
+                <spring:url value="/admin/updateuser/" var="updateuserUrl" />
 
                 <a href="${deleteuserUrl}" title="Delete User"> - delete user</a>
                 <br />
-                <a href="${designateadminUrl}" title="Designate Admin"> - designate admin</a>
+                <a href="${updateuserUrl}" title="Designate Admin"> - designate admin</a>
             </sec:authorize>
         </td>
     </tr>

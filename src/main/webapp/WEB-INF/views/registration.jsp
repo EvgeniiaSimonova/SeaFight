@@ -13,14 +13,17 @@
             <tr>
                 <td>Login</td>
                 <td><form:input path="login" /></td>
+                <td>${LoginError}</td>
             </tr>
             <tr>
                 <td>Password</td>
                 <td><form:password path="password" /></td>
+                <td></td>
             </tr>
             <tr>
                 <td>Confirm Password</td>
                 <td><form:password path="confirmPassword" /></td>
+                <td>${PasswordError}</td>
             </tr>
             <tr>
                 <td colspan="3">

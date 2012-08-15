@@ -2,6 +2,7 @@ package ru.testhf.srv3.h37945.service;
 
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,11 +21,27 @@ public class CustomUserDetailsService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String s) {
-        try {
+        /*try {
             User user = userService.getUserByLogin(s);
             return new UserDetailsImpl(user.getLogin(), user.getPassword(), user.getRole());
         } catch (ObjectNotFoundException e) {
-            throw new NumberFormatException("Could not find user with this login");
+            throw new UsernameNotFoundException("Could not find user with this login");
+        }*/
+
+        /*List<User> users = userService.userList();
+        Iterator<User> iterator = users.iterator();
+        while (iterator.hasNext()) {
+            User user = iterator.next();
+            if (user.getLogin().equals(s)) {
+                return new UserDetailsImpl(user.getLogin(), user.getPassword(), user.getRole());
+            }
+        }
+        throw new UsernameNotFoundException(s + "not found");*/
+        try {
+            User user = userService.getUserByLogin(s);
+            return new UserDetailsImpl(user.getLogin(), user.getPassword(), user.getRole());
+        } catch (Exception e) {
+            throw new UsernameNotFoundException("Could not find user with this login");
         }
     }
 }

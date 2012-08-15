@@ -5,12 +5,12 @@
 <%@ page session="true"%>
 <html>
 <head>
-    <meta http-equiv="refresh" content="3; url=/">
-    <title>Registration</title>
+    <meta http-equiv="refresh" content="3; url=/admin/deleteuser/">
+    <title>Delete User</title>
 </head>
 <body>
 <div align="center">
-    <h3>Your registration is successful. Thank you!</h3>
+    <h3>User has deleted</h3>
 </div>
 </body>
 </html>

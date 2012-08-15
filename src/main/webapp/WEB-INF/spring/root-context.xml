@@ -33,6 +33,6 @@
         <beans:property name="suffix" value=".jsp" />
     </beans:bean>
 
-
+    <beans:bean id="accessDeniedHandler" class="ru.testhf.srv3.h37945.service.MyAccessDeniedHandler" />
 
 </beans:beans>

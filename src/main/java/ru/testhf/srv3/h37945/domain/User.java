@@ -59,4 +59,8 @@ public class User implements Serializable{
         public static final String USER_FIND_BY_ID = "User.findById";
         public static final String USER_FIND_BY_NAME = "User.findByName";
     }
+
+    public String toString() {
+        return new String(login + " " + password + " " + role);
+    }
 }

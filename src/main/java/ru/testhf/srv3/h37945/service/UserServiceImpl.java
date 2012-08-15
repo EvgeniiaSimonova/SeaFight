@@ -24,8 +24,18 @@ public class UserServiceImpl implements UserService {
         return userDAO.userList();
     }
 
-    @Override
+    @Transactional
     public User getUserByLogin(String login) {
         return userDAO.getUserByLogin(login);
+    }
+
+    @Transactional
+    public void deleteUser(String login) {
+        userDAO.deleteUser(login);
+    }
+
+    @Transactional
+    public void updateUser(String login) {
+        userDAO.updateUser(login);
     }
 }
