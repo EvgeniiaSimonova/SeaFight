@@ -5,12 +5,12 @@
 <%@ page session="true"%>
 <html>
 <head>
-    <meta http-equiv="refresh" content="2; url=/profile/">
+    <meta http-equiv="refresh" content="3; url=/game/mygames/continued/">
     <title>Error</title>
 </head>
 <body>
 <div align="center">
-    <h3>Page does not exist</h3>
+    <h3>Your opponent did not fill field</h3>
 </div>
 </body>
 </html>

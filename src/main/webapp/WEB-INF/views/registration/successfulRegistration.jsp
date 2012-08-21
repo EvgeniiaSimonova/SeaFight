@@ -5,12 +5,12 @@
 <%@ page session="true"%>
 <html>
 <head>
-    <meta http-equiv="refresh" content="2; url=/profile/">
-    <title>Error</title>
+    <meta http-equiv="refresh" content="3; url=/">
+    <title>Registration</title>
 </head>
 <body>
 <div align="center">
-    <h3>Page does not exist</h3>
+    <h3>Your registration is successful. Thank you!</h3>
 </div>
 </body>
 </html>

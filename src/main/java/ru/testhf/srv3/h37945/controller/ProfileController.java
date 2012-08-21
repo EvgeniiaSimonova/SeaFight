@@ -25,9 +25,6 @@ public class ProfileController {
     public ModelAndView handle403(Model model) {
 
         ModelAndView modelAndView = new ModelAndView("profile");
-        //modelAndView.addObject("errorCode", "400");
-        //modelAndView.addObject("message", "Error 400 happens");
-
         return modelAndView;
     }
 }

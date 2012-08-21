@@ -4,11 +4,6 @@ package ru.testhf.srv3.h37945.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@NamedQueries({
-        @NamedQuery(name = User.NamedQuery.USER_FIND_ALL, query = "from User"),
-        @NamedQuery(name = User.NamedQuery.USER_FIND_BY_ID, query = "from User where id = :id") })
-@NamedNativeQueries({
-        @NamedNativeQuery(name = User.NamedQuery.USER_FIND_BY_NAME, query = "select * from User where name like :name", resultClass = User.class) })
 
 @Entity
 @Table(name="Users")
@@ -52,12 +47,6 @@ public class User implements Serializable{
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public static class NamedQuery {
-        public static final String USER_FIND_ALL = "User.findAll";
-        public static final String USER_FIND_BY_ID = "User.findById";
-        public static final String USER_FIND_BY_NAME = "User.findByName";
     }
 
     public String toString() {

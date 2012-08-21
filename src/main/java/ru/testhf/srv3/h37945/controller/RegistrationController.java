@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.testhf.srv3.h37945.forms.UserForm;
 import ru.testhf.srv3.h37945.domain.User;
-import ru.testhf.srv3.h37945.service.UserService;
+import ru.testhf.srv3.h37945.service.dao.UserService;
 
 @Controller
 public class RegistrationController {
@@ -19,7 +19,7 @@ public class RegistrationController {
     public String getRegistrationPage(ModelMap model) {
         UserForm userForm = new UserForm();
         model.put("userForm", userForm);
-        return "registration";
+        return "registration/registration";
     }
 
     @RequestMapping(value = "/registration/", method = RequestMethod.POST)
@@ -28,13 +28,13 @@ public class RegistrationController {
         if (!userForm.getLogin().equals("") && userForm.getPassword().equals(userForm.getConfirmPassword())) {
             try {
                 userService.saveUser(new User(userForm.getLogin(), userForm.getPassword(), "ROLE_USER"));
-                return "successfulRegistration";
+                return "registration/successfulRegistration";
             } catch (Exception e) {
                 model.put("LoginError", "Wrong Login");
             }
         } else {
             model.put("PasswordError", "Login is empty or passwords are different");
         }
-        return "registration";
+        return "registration/registration";
     }
 }

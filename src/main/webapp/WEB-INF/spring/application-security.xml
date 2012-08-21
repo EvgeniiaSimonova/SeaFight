@@ -13,6 +13,7 @@
         <intercept-url pattern="/profile/**" access="hasRole('ROLE_USER')" />
         <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
         <intercept-url pattern="/game/**" access="hasRole('ROLE_USER')" />
+        <intercept-url pattern="/games/**" access="hasRole('ROLE_USER')" />
 
         <logout logout-url="/logout" success-handler-ref="customLogoutSuccessHandler"/>
         <form-login default-target-url="/profile/" always-use-default-target="true"/>

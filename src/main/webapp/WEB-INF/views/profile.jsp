@@ -10,32 +10,36 @@
 <body>
 <table width="80%" align="center">
     <tr>
-        <td colspan="3" align="center"><h3>Profile</h3></td>
+        <td colspan="2" align="center"><h3>Profile</h3></td>
     </tr>
     <tr>
-        <td width="25%">Menu</td>
-        <td>Hi, ${userDetailsImpl.username}!</td>
-        <td width="25%">
-            <sec:authorize access="hasRole('ROLE_ADMIN')">
-                Menu Admin
-            </sec:authorize>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <spring:url value="/game/" var="gameUrl" />
-            <spring:url value="/statistics/" var="statisticsUrl" />
+        <td width="35%">
+            <h3>Menu</h3>
+            <spring:url value="/game/requests/send/" var="sendRequestUrl" />
+            <spring:url value="/game/requests/response/" var="responseRequestUrl" />
+            <spring:url value="/game/mygames/continued/" var="continuedGamesUrl" />
+            <spring:url value="/game/mygames/completed/" var="completedGamesUrl" />
             <spring:url value="/logout" var="logoutUrl" />
+            <p> - Requests</p>
+            <a href="${sendRequestUrl}" title="Send Request"> - - send request</a>
+            <br />
+            <a href="${responseRequestUrl}" title="Response Request"> - - response request</a>
+            <br />
 
-            <a href="${gameUrl}" title="Start Game"> - start game</a>
+            <p> - Games</p>
+            <a href="${continuedGamesUrl}" title="Continued Games"> - - continued games</a>
             <br />
-            <a href="${statisticsUrl}" title="Statistics"> - statistics</a>
+            <a href="${completedGamesUrl}" title="Completed Games"> - - completed games</a>
             <br />
-            <a href="${logoutUrl}" title="Logout"> - logout</a>
-        </td>
-        <td></td>
-        <td>
+
+            <p> - Exit</p>
+            <a href="${logoutUrl}" title="Logout"> - - logout</a>
+            <br />
+            <br />
+
+
             <sec:authorize access="hasRole('ROLE_ADMIN')">
+                <h3>Menu Admin</h3>
                 <spring:url value="/admin/deleteuser/" var="deleteuserUrl" />
                 <spring:url value="/admin/updateuser/" var="updateuserUrl" />
 
@@ -44,6 +48,8 @@
                 <a href="${updateuserUrl}" title="Designate Admin"> - designate admin</a>
             </sec:authorize>
         </td>
+
+        <td>Hi, ${userDetailsImpl.username}!</td>
     </tr>
 </table>
 
