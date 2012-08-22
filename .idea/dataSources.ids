@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><component name="dataSourceStorage">
+  <data-source source="LOCAL" name="hibernate.cfg.xml" product="" version="" jdbc-version="" driver-name="" driver-version="" uuid="91f09e3a-ce0e-4e3d-a61c-c0433f609424">
+    <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+    <jdbc-url>jdbc:mysql://h37945.srv3.test-hf.ru:3306/h37945_SeaFight</jdbc-url>
+    <user-name>h37945_Evgenia</user-name>
+    <user-password>df93df98df9adf98df9bdf9a</user-password>
+    <libraries>
+      <library>
+        <url>jar://$MAVEN_REPOSITORY$/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar!/</url>
+      </library>
+    </libraries>
+  </data-source>
+</component>
