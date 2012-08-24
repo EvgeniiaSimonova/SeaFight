@@ -1,5 +1,6 @@
 package ru.testhf.srv3.h37945.service.dao.impl;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,28 +16,28 @@ public class FieldServiceImpl implements FieldService {
     @Autowired
     private FieldDAO fieldDAO;
 
-    @Transactional
-    public void addField(Field field) {
-        fieldDAO.addField(field);
+    public int addField(Field field) throws MySQLIntegrityConstraintViolationException {
+        return fieldDAO.addField(field);
     }
 
-    @Transactional
-    public Field getFieldById(int id) {
+    public Field getFieldById(int id) throws MySQLIntegrityConstraintViolationException {
         return fieldDAO.getFieldById(id);
     }
 
-    @Transactional
     public List<Field> fieldList() {
         return fieldDAO.fieldList();
     }
 
-    @Transactional
     public void setShips(int id, String ships) {
         fieldDAO.setShips(id, ships);
     }
 
-    @Transactional
     public void addShot(int id, int cell) {
         fieldDAO.addShot(id, cell);
+    }
+
+    @Override
+    public boolean isKilled(int id) {
+        return fieldDAO.isKilled(id);
     }
 }

@@ -3,32 +3,14 @@ package ru.testhf.srv3.h37945.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name="Games")
 public class Game implements Serializable {
-    @Id
-    @GeneratedValue
     private int id;
-
-    @Column
     private String firstLogin;
-
-    @Column
     private String secondLogin;
-
-    @Column
     private boolean isCompleted;
-
-    @Column
     private String winner;
-
-    @Column
     private int idFirstField;
-
-    @Column
     private int idSecondField;
-
-    @Column
     private int move;
 
     public Game() {
@@ -42,6 +24,17 @@ public class Game implements Serializable {
         this.idFirstField = idFirstField;
         this.idSecondField = idSecondField;
         move = 1;
+    }
+
+    public Game(int id, String firstLogin, String secondLogin, boolean completed, String winner, int idFirstField, int idSecondField, int move) {
+        this.id = id;
+        this.firstLogin = firstLogin;
+        this.secondLogin = secondLogin;
+        isCompleted = completed;
+        this.winner = winner;
+        this.idFirstField = idFirstField;
+        this.idSecondField = idSecondField;
+        this.move = move;
     }
 
     public int getId() {

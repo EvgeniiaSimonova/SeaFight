@@ -1,5 +1,6 @@
 package ru.testhf.srv3.h37945.service.dao.impl;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,27 +16,22 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private RequestDAO requestDAO;
 
-    @Transactional
-    public void addRequest(Request request) {
+    public void addRequest(Request request) throws MySQLIntegrityConstraintViolationException {
         requestDAO.addRequest(request);
     }
 
-    @Transactional
     public List<Request> requestList() {
         return requestDAO.requestList();
     }
 
-    @Transactional
-    public Request getRequestById(int id) {
+    public Request getRequestById(int id) throws MySQLIntegrityConstraintViolationException {
         return requestDAO.getRequestById(id);
     }
 
-    @Transactional
     public void updateRequest(int id, int state, int idGame) {
         requestDAO.updateRequest(id, state, idGame);
     }
 
-    @Transactional
     public List<Request> requestsForUser(String login) {
         return requestDAO.requestsForUser(login);
     }

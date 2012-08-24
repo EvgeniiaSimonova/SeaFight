@@ -1,5 +1,6 @@
 package ru.testhf.srv3.h37945.service.dao.impl;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,37 +16,30 @@ public class GameServiceImpl implements GameService {
     @Autowired
     private GameDAO gameDAO;
 
-    @Transactional
-    public void addGame(Game game) {
-        gameDAO.addGame(game);
+    public int addGame(Game game) throws MySQLIntegrityConstraintViolationException {
+        return gameDAO.addGame(game);
     }
 
-    @Transactional
     public List<Game> gamesList() {
         return gameDAO.gamesList();
     }
 
-    @Transactional
-    public Game getGameById(int id) {
+    public Game getGameById(int id) throws MySQLIntegrityConstraintViolationException {
         return gameDAO.getGameById(id);
     }
 
-    @Transactional
     public List<Game> gameListForUser(String login) {
         return gameDAO.gameListForUser(login);
     }
 
-    @Transactional
     public List<Game> completedGameListForUser(String login) {
         return gameDAO.completedGameListForUser(login);
     }
 
-    @Transactional
     public void changeMove(int id) {
         gameDAO.changeMove(id);
     }
 
-    @Transactional
     public void setWinner(int id, String login) {
         gameDAO.setWinner(id, login);
     }

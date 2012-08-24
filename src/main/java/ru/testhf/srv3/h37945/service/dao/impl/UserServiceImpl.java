@@ -1,5 +1,6 @@
 package ru.testhf.srv3.h37945.service.dao.impl;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,28 +16,23 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDAO userDAO;
 
-    @Transactional
-    public void saveUser(User user) {
+    public void saveUser(User user) throws MySQLIntegrityConstraintViolationException {
         userDAO.saveUser(user);
     }
 
-    @Transactional
     public List<User> userList() {
         return userDAO.userList();
     }
 
-    @Transactional
-    public User getUserByLogin(String login) {
+    public User getUserByLogin(String login) throws MySQLIntegrityConstraintViolationException{
         return userDAO.getUserByLogin(login);
     }
 
-    @Transactional
-    public void deleteUser(String login) {
+    public void deleteUser(String login) throws MySQLIntegrityConstraintViolationException {
         userDAO.deleteUser(login);
     }
 
-    @Transactional
-    public void updateUser(String login) {
+    public void updateUser(String login) throws MySQLIntegrityConstraintViolationException {
         userDAO.updateUser(login);
     }
 

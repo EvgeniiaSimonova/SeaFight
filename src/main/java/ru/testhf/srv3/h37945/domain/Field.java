@@ -3,20 +3,10 @@ package ru.testhf.srv3.h37945.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "Fields")
 public class Field implements Serializable {
-    @Id
-    @GeneratedValue
     private int id;
-
-    @Column
     private String ships;
-
-    @Column
     private String shots;
-
-    @Column
     private boolean isKilled;
 
     public Field() {
@@ -26,6 +16,13 @@ public class Field implements Serializable {
         this.ships = ships;
         this.shots = shots;
         isKilled = killed;
+    }
+
+    public Field(int id, String ships, String shots, boolean isKilled) {
+        this.id = id;
+        this.ships = ships;
+        this.shots = shots;
+        this.isKilled = isKilled;
     }
 
     public int getId() {

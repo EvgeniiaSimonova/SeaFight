@@ -1,15 +1,16 @@
 package ru.testhf.srv3.h37945.service.dao;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import ru.testhf.srv3.h37945.domain.Game;
 
 import java.util.List;
 
 public interface GameService {
-    public void addGame(Game game);
+    public int addGame(Game game) throws MySQLIntegrityConstraintViolationException;
 
     public List<Game> gamesList();
 
-    public Game getGameById(int id);
+    public Game getGameById(int id) throws MySQLIntegrityConstraintViolationException;
 
     public List<Game> gameListForUser(String login);
 

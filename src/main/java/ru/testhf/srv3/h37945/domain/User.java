@@ -4,16 +4,9 @@ package ru.testhf.srv3.h37945.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 
-
-@Entity
-@Table(name="Users")
 public class User implements Serializable{
-    @Id
-    @Column
     private String login;
-    @Column
     private String password;
-    @Column
     private String role;
 
     public User() {

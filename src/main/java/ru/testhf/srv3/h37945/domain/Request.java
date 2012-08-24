@@ -3,29 +3,25 @@ package ru.testhf.srv3.h37945.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name="Requests")
 public class Request implements Serializable {
-    @Id
-    @GeneratedValue
     private int id;
-
-    @Column
     private String firstLogin;
-
-    @Column
     private String secondLogin;
-
-    @Column
     private int state;
-
-    @Column
     private int idGame;
 
     public Request() {
     }
 
     public Request(String firstLogin, String secondLogin, int state, int idGame) {
+        this.firstLogin = firstLogin;
+        this.secondLogin = secondLogin;
+        this.state = state;
+        this.idGame = idGame;
+    }
+
+    public Request(int id, String firstLogin, String secondLogin, int state, int idGame) {
+        this.id = id;
         this.firstLogin = firstLogin;
         this.secondLogin = secondLogin;
         this.state = state;

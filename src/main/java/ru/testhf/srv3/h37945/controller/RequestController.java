@@ -1,5 +1,6 @@
 package ru.testhf.srv3.h37945.controller;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -46,23 +47,7 @@ public class RequestController {
         return requestList;
     }
 
-    @ModelAttribute(value = "completedGameList")
-    public GameList getCompletedGames() {
-        List<Game> games = gameService.
-                completedGameListForUser(SecurityContextHolder.getContext().getAuthentication().getName());
-        GameList gameList = new GameList(games);
-        return gameList;
-    }
-
-    @ModelAttribute(value = "continuedGameList")
-    public GameList getContinuedGames() {
-        List<Game> games = gameService.
-                gameListForUser(SecurityContextHolder.getContext().getAuthentication().getName());
-        GameList gameList = new GameList(games);
-        return gameList;
-    }
-
-    @ModelAttribute
+   @ModelAttribute
     public UserList getUsers() {
         List<User> users = userService.userList();
         UserList userList = new UserList(users);
@@ -87,7 +72,7 @@ public class RequestController {
                 requestService.addRequest(request);
 
                 return "gamePages/successfulSend";
-            } catch (Exception e){
+            } catch (MySQLIntegrityConstraintViolationException e){
                 model.put("Error", "Wrong login");
                 loginForm.setLogin("");
             }
@@ -113,15 +98,11 @@ public class RequestController {
                 }
                 Request request = requestService.getRequestById(id);
                 if (state.equals("agree")) {
-                    Field field1 = new Field("", "", false);
-                    Field field2 = new Field("", "", false);
-                    fieldService.addField(field1);
-                    fieldService.addField(field2);
-
-                    Game game = new Game(request.getFirstLogin(), request.getSecondLogin(),
-                            false,"", field1.getId(), field2.getId());
-                    gameService.addGame(game);
-                    requestService.updateRequest(id, 1, game.getId());
+                    int idFirstField = fieldService.addField(new Field("", "", false));
+                    int idSecondField = fieldService.addField(new Field("", "", false));
+                    int idGame = gameService.addGame(new Game(request.getFirstLogin(), request.getSecondLogin(),
+                            false,"", idFirstField, idSecondField));
+                    requestService.updateRequest(id, 1, idGame);
                 }
                 if (state.equals("refuse")) {
                     requestService.updateRequest(id, -1, -1);

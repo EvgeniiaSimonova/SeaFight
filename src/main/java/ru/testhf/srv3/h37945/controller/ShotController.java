@@ -1,5 +1,6 @@
 package ru.testhf.srv3.h37945.controller;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -35,34 +36,41 @@ public class ShotController {
     @ModelAttribute(value = "myField")
     public CellsList getMyField(@PathVariable int idGame) {
         CellsList cellsList = new CellsList();
-        Field field;
-        Game game = gameService.getGameById(idGame);
-        if (game.getFirstLogin().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
-            field = fieldService.getFieldById(game.getIdFirstField());
-        } else {
-            field = fieldService.getFieldById(game.getIdSecondField());
+        try {
+            Field field;
+            Game game = gameService.getGameById(idGame);
+            if (game.getFirstLogin().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                field = fieldService.getFieldById(game.getIdFirstField());
+            } else {
+                field = fieldService.getFieldById(game.getIdSecondField());
+            }
+            cellsList.setMyCells(field.getShips(), field.getShots());
+        } catch (MySQLIntegrityConstraintViolationException e) {
         }
-        cellsList.setMyCells(field.getShips(), field.getShots());
         return cellsList;
     }
 
     @ModelAttribute(value = "opponentField")
     public CellsList getOpponentField(@PathVariable int idGame) {
         CellsList cellsList = new CellsList();
-        Field field;
-        Game game = gameService.getGameById(idGame);
-        if (game.getFirstLogin().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
-            field = fieldService.getFieldById(game.getIdSecondField());
-        } else {
-            field = fieldService.getFieldById(game.getIdFirstField());
+        try {
+            Field field;
+            Game game = gameService.getGameById(idGame);
+            if (game.getFirstLogin().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                field = fieldService.getFieldById(game.getIdSecondField());
+            } else {
+                field = fieldService.getFieldById(game.getIdFirstField());
+            }
+            cellsList.setOpponentCells(field.getShips(), field.getShots());
+        } catch (MySQLIntegrityConstraintViolationException e) {
         }
-        cellsList.setOpponentCells(field.getShips(), field.getShots());
         return cellsList;
     }
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getFields(@PathVariable int idGame, ModelMap model) {
+        try {
         Game game = gameService.getGameById(idGame);
         if ( !game.isCompleted() &&
              ((game.getFirstLogin().equals(SecurityContextHolder.getContext().getAuthentication().getName()) &&
@@ -77,6 +85,9 @@ public class ShotController {
             model.put("move", 0);
             return "gamePages/fieldsForGame/game";
         }
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            return "error";
+        }
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
@@ -87,47 +98,50 @@ public class ShotController {
         int cellNumber = figure*10+letter;
 
          // opponent field
-        Field field;
-        Game game = gameService.getGameById(idGame);
-        if (game.getFirstLogin().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
-            field = fieldService.getFieldById(game.getIdSecondField());
-        } else {
-            field = fieldService.getFieldById(game.getIdFirstField());
-        }
-        //shot
-        String shot = field.getShots();
-        String[] shots = shot.split(",");
-        //String ship
-        String ship = field.getShips();
-        String[] ships = ship.split(",");
+        try {
+            Field field;
+            Game game = gameService.getGameById(idGame);
+            if (game.getFirstLogin().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                field = fieldService.getFieldById(game.getIdSecondField());
+            } else {
+                field = fieldService.getFieldById(game.getIdFirstField());
+            }
+            //shot
+            String shot = field.getShots();
+            String[] shots = shot.split(",");
+            //String ship
+            String ship = field.getShips();
+            String[] ships = ship.split(",");
 
-        // check
-        if (!shot.equals("")) {
-            for (int i = 0; i < shots.length; i++) {
-                if (Integer.parseInt(shots[i]) == cellNumber) {
-                    model.put("message", "You are wrong. You have shooted this cell!");
-                    return "gamePages/fieldsForGame/shotResult";
-                }
-            }
-        }
-        fieldService.addShot(field.getId(), cellNumber);
-        field = fieldService.getFieldById(field.getId());
-        if (!ship.equals("")) {
-            for (int i = 0; i < ships.length; i++) {
-                if (Integer.parseInt(ships[i]) == cellNumber) {
-                    if (field.isKilled()) {
-                        gameService.setWinner(idGame, SecurityContextHolder.getContext().getAuthentication().getName());
-                        model.put("message", "Congratulations! You are winner");
-                        gameService.changeMove(idGame);
-                    } else {
-                        model.put("message", "Congratulations!");
+            // check
+            if (!shot.equals("")) {
+                for (int i = 0; i < shots.length; i++) {
+                    if (Integer.parseInt(shots[i]) == cellNumber) {
+                        model.put("message", "You are wrong. You have shooted this cell!");
+                        return "gamePages/fieldsForGame/shotResult";
                     }
-                    return "gamePages/fieldsForGame/shotResult";
                 }
             }
+            fieldService.addShot(field.getId(), cellNumber);
+            if (!ship.equals("")) {
+                for (int i = 0; i < ships.length; i++) {
+                    if (Integer.parseInt(ships[i]) == cellNumber) {
+                        if (fieldService.isKilled(field.getId())) {
+                            gameService.setWinner(idGame, SecurityContextHolder.getContext().getAuthentication().getName());
+                            model.put("message", "Congratulations! You are winner");
+                            gameService.changeMove(idGame);
+                        } else {
+                            model.put("message", "Congratulations!");
+                        }
+                        return "gamePages/fieldsForGame/shotResult";
+                    }
+                }
+            }
+            model.put("message", "Sorry, you missed");
+            gameService.changeMove(idGame);
+            return "gamePages/fieldsForGame/shotResult";
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            return "error";
         }
-        model.put("message", "Sorry, you missed");
-        gameService.changeMove(idGame);
-        return "gamePages/fieldsForGame/shotResult";
     }
 }

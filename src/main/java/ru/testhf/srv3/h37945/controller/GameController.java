@@ -1,5 +1,6 @@
 package ru.testhf.srv3.h37945.controller;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,24 +35,10 @@ public class GameController {
     private static final Logger logger = LoggerFactory.getLogger(GameController.class);
 
     @Autowired
-    private RequestService requestService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
     private GameService gameService;
 
     @Autowired
     private FieldService fieldService;
-
-    @ModelAttribute
-    public RequestList getRequests() {
-        List<Request> requests =
-                requestService.requestsForUser(SecurityContextHolder.getContext().getAuthentication().getName());
-        RequestList requestList = new RequestList(requests);
-        return requestList;
-    }
 
     @ModelAttribute(value = "completedGameList")
     public GameList getCompletedGames() {
@@ -69,14 +56,6 @@ public class GameController {
         return gameList;
     }
 
-    @ModelAttribute
-    public UserList getUsers() {
-        List<User> users = userService.userList();
-        UserList userList = new UserList(users);
-        return userList;
-    }
-
-
     @RequestMapping(value = "/game/mygames/continued/", method = RequestMethod.GET)
     public String getContinuedGamesPage(ModelMap model) {
         LoginForm loginForm = new LoginForm();
@@ -92,57 +71,56 @@ public class GameController {
             try {
                 id = Integer.parseInt(login);
                 if (!getContinuedGames().isIdIncludeList(id)) {
-                    throw new Exception();
+                    model.put("Error", "Wrong id");
+                    loginForm.setLogin("");
+                    throw new MySQLIntegrityConstraintViolationException("Wrong id of game");
                 }
-            } catch (Exception e){
-                model.put("Error", "Wrong id");
-                loginForm.setLogin("");
-            }
+                Game game = gameService.getGameById(id);
+                Field field1 = fieldService.getFieldById(game.getIdFirstField());
+                Field field2 = fieldService.getFieldById(game.getIdSecondField());
+                if (!field1.getShips().equals("") && !field2.getShips().equals("")) {
 
-            Game game = gameService.getGameById(id);
-            Field field1 = fieldService.getFieldById(game.getIdFirstField());
-            Field field2 = fieldService.getFieldById(game.getIdSecondField());
-            if (!field1.getShips().equals("") && !field2.getShips().equals("")) {
-
-                if (game.getFirstLogin().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
-                    if (game.getMove() == 1) {
-                        model.put("move", 1);
+                    if (game.getFirstLogin().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                        if (game.getMove() == 1) {
+                            model.put("move", 1);
+                        } else {
+                            model.put("move", 0);
+                        }
                     } else {
-                        model.put("move", 0);
+                        if (game.getMove() == 2) {
+                            model.put("move", 1);
+                        } else {
+                            model.put("move", 0);
+                        }
                     }
+                    model.put("id", id);
+                    return "gamePages/fieldsForGame/game";
                 } else {
-                    if (game.getMove() == 2) {
-                        model.put("move", 1);
+                    if (game.getFirstLogin().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                        if (field1.getShips().equals("")) {
+                            // send fill field
+                            TableForm tableForm = new TableForm();
+                            model.put("tableForm", tableForm);
+                            model.put("id", id);
+                            return "gamePages/fieldsForGame/field";
+                        } else {
+                            // show message
+                            return "gamePages/fieldsForGame/opponentError";
+                        }
                     } else {
-                        model.put("move", 0);
+                        if (field2.getShips().equals("")) {
+                            // send fill field
+                            TableForm tableForm = new TableForm();
+                            model.put("tableForm", tableForm);
+                            model.put("id", id);
+                            return "gamePages/fieldsForGame/field";
+                        } else {
+                            // show message
+                            return "gamePages/fieldsForGame/opponentError";
+                        }
                     }
                 }
-                model.put("id", id);
-                return "gamePages/fieldsForGame/game";
-            } else {
-                if (game.getFirstLogin().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
-                    if (field1.getShips().equals("")) {
-                        // send fill field
-                        TableForm tableForm = new TableForm();
-                        model.put("tableForm", tableForm);
-                        model.put("id", id);
-                        return "gamePages/fieldsForGame/field";
-                    } else {
-                        // show message
-                        return "gamePages/fieldsForGame/opponentError";
-                    }
-                } else {
-                    if (field2.getShips().equals("")) {
-                        // send fill field
-                        TableForm tableForm = new TableForm();
-                        model.put("tableForm", tableForm);
-                        model.put("id", id);
-                        return "gamePages/fieldsForGame/field";
-                    } else {
-                        // show message
-                        return "gamePages/fieldsForGame/opponentError";
-                    }
-                }
+            } catch (MySQLIntegrityConstraintViolationException e) {
             }
         }
         return "gamePages/continuedGames";
@@ -164,7 +142,7 @@ public class GameController {
                 }
             }
         } catch (Exception e) {
-            logger.info("Error = " + e.toString());
+            logger.info("Error: " + getClass().getName() + " " + e.getMessage());
             return "error";
         }
         return "gamePages/fieldsForGame/successfulFillingField";

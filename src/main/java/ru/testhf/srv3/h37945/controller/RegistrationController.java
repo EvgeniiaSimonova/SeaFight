@@ -1,5 +1,6 @@
 package ru.testhf.srv3.h37945.controller;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -29,8 +30,8 @@ public class RegistrationController {
             try {
                 userService.saveUser(new User(userForm.getLogin(), userForm.getPassword(), "ROLE_USER"));
                 return "registration/successfulRegistration";
-            } catch (Exception e) {
-                model.put("LoginError", "Wrong Login");
+            } catch (MySQLIntegrityConstraintViolationException e) {
+                model.put("LoginError", e.getMessage());
             }
         } else {
             model.put("PasswordError", "Login is empty or passwords are different");
